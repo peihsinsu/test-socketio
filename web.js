@@ -17,22 +17,30 @@ app.get('/', function (req, res) {
 });
  
 var prefix = 'room';
+
+io.set('heartbeat interval', 50);
 io.on('connection', function (socket) {
+	//console.log(socket.manager.settings);
 	room = prefix + "-" + new Date().getTime();
 	socket.join(room);
+  
+	if(process.argv[2] == 'loop') 	
   var loop = setInterval(function(){
-    //socket.emit('news', { ts: new Date().toString() });
+		doit();
+  }, 3000);
+
+  function doit() {
 		var ts = new Date().getTime();
 	  io.sockets.in(room).emit('roomevent', {room: room, ts: ts, msg: 'sent to room...'})
-    //console.log('>>>', io.sockets.clients(room));
-  }, 3000);
-  
+	}
+
 	socket.on('event1', function (data) {
     console.log(data);
   });
 
 	socket.on('disconnect', function(){
-		clearInterval(loop);
+		console.log('client disconnected...');
+		if(loop) clearInterval(loop);
 	});
 
 });
