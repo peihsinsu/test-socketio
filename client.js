@@ -2,7 +2,11 @@ var log = require('nodeutil').logger.getInstance('test');
 var mode = process.env.MODE || 'test';
 var socket_host = {
 	  test: 'http://127.0.0.1:8000/',
+		gce: 'http://104.155.230.27:8000/'
 }[mode];
+
+log.info('using mode:' + mode);
+log.info('socket_host:' + socket_host);
 
 var io = require('socket.io-client');
 var opts = { reconnect: true, connect_timeout: 5000 };
@@ -27,6 +31,10 @@ socket.on('news', function(data){
 socket.on('roomevent', function(data){
 	var id = socket.io ? socket.io.engine.id : socket.socket.sessionid;
 	log.info('[%s][%s]got news:', id, new Date().toString(), data);
+});
+
+socket.on('disconnect', function(){
+	log.info('[%s]got disconnect event...', new Date().toString());
 });
 
 socket.on('reconnect', function(){
