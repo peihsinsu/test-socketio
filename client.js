@@ -2,6 +2,8 @@ var log = require('nodeutil').logger.getInstance('test');
 var mode = process.env.MODE || 'test';
 var socket_host = {
 	  test: 'http://127.0.0.1:8000/',
+	  test1: 'http://127.0.0.1:8082/',
+	  test2: 'http://127.0.0.1:8081/',
 		gce: 'http://104.155.230.27:8000/'
 }[mode];
 
